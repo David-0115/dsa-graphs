@@ -79,6 +79,40 @@ class Graph {
     }
     return values;
   }
+
+  shortestPath(start, end) {
+    if (start === end) {
+      return [start.value];
+    }
+
+    var queue = [start];
+    let visited = new Set();
+    let predecessors = {};
+    let path = [];
+
+    while (queue.length) {
+      let currentVertex = queue.shift();
+
+      if (currentVertex === end) {
+        let stop = predecessors[end.value];
+        while (stop) {
+          path.push(stop);
+          stop = predecessors[stop];
+        }
+        path.unshift(start.value);
+        path.reverse();
+        return path;
+      }
+
+      visited.add(currentVertex);
+      for (let vertex of currentVertex.adjacent) {
+        if (!visited.has(vertex)) {
+          predecessors[vertex.value] = currentVertex.value;
+          queue.push(vertex);
+        }
+      }
+    }
+  }
 }
 
 module.exports = { Graph, Node }
